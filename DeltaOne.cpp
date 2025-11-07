@@ -466,6 +466,9 @@ int main() {
         else if (input == "help") {
             help_menu(); 
         }
+        else {
+            cout << "Unknown command or parameters." << endl;
+        }
     }
 
     ofstream fout("history.txt");                   // Save history for next run
