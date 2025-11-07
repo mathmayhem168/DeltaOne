@@ -30,3 +30,5 @@ chatbot
 Esc
 :w
 exit
+set uptime
+exit

@@ -22,16 +22,7 @@
 #include <optional>
 #include <filesystem> 
 
-bool check_dev_key(const std::string& input) {
-    std::ifstream fin(secret_path);
-    if (!fin.is_open()) return false;
 
-    std::string stored_key;
-    getline(fin, stored_key);
-    fin.close();
-
-    return input == stored_key;
-}
 
 
 
@@ -184,7 +175,7 @@ void get_weather(const std::string& city) {
 
 
 bool dev_mode = false;      // Dev Mode!!!!!!
-const string secret_path = "dev_secret.txt";
+const string secret_path = "Vjbdsfjbhsdfbjsadkfjbsadfbasjfjbdsjkbdfe(&8$:+(#9&:#(-";
 
 
 // Help menu
