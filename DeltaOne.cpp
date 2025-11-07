@@ -174,7 +174,7 @@ void get_weather(const std::string& city) {
 }
 
 
-bool dev_mode = false;      // Dev Mode!!!!!!
+bool dev_mode = true;      // Dev Mode!!!!!!
 const string secret_path = "Vjbdsfjbhsdfbjsadkfjbsadfbasjfjbdsjkbdfe(&8$:+(#9&:#(-";
 
 
@@ -216,15 +216,6 @@ int main() {
             if (history_list.size() > MAX_HISTORY)
                 history_list.erase(history_list.begin()); // remove oldest
         }
-        
-        if (check_dev_key(input)) {
-            dev_mode = true;
-            continue;
-        }
-
-        
-
-
 
         // Branches of input/output flows
 
@@ -371,6 +362,10 @@ int main() {
             start_time = chrono::steady_clock::now() - chrono::seconds(new_time);
             cout << "1" << endl;
             cin.ignore();
+        }
+        else if (input == secret_path) {
+            dev_mode = true;
+            cout << "Dev mode activated.";
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
