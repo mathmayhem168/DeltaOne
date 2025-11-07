@@ -20,6 +20,23 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <optional>
+#include <filesystem> 
+
+bool check_dev_key(const std::string& input) {
+    std::ifstream fin(secret_path);
+    if (!fin.is_open()) return false;
+
+    std::string stored_key;
+    getline(fin, stored_key);
+    fin.close();
+
+    return input == stored_key;
+}
+
+
+
+
+
 
 using json = nlohmann::json;
 
@@ -166,8 +183,8 @@ void get_weather(const std::string& city) {
 }
 
 
-
-
+bool dev_mode = false;      // Dev Mode!!!!!!
+const string secret_path = "dev_secret.txt";
 
 
 // Help menu
@@ -209,6 +226,15 @@ int main() {
                 history_list.erase(history_list.begin()); // remove oldest
         }
         
+        if (check_dev_key(input)) {
+            dev_mode = true;
+            continue;
+        }
+
+        
+
+
+
         // Branches of input/output flows
 
         if (input == "exit") {
@@ -346,6 +372,14 @@ int main() {
             if (elapsed > 10000) {
                 cout << "A long time. Woah." << endl;
             }
+        }
+        else if (dev_mode && input == "set uptime") {
+            cout << "Enter new uptime (seconds): ";
+            long long new_time;
+            cin >> new_time;
+            start_time = chrono::steady_clock::now() - chrono::seconds(new_time);
+            cout << "1" << endl;
+            cin.ignore();
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
