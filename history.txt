@@ -1,0 +1,32 @@
+1 + 90
+exit
+randomnum 1 80
+exit
+coderun demo.cpp
+exit
+weather Athens
+exit
+weather Athens
+exit
+exit
+weather New York
+exit
+weather New York
+exit
+exit
+force
+uptime
+uptime
+uptime
+exiy
+exit
+2 + 80
+56 / 8
+10 mod 3
+1 && 1
+50 * 50
+time
+chatbot
+Esc
+:w
+exit
