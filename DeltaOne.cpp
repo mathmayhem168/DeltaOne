@@ -365,7 +365,13 @@ int main() {
         }
         else if (input == secret_path) {
             dev_mode = true;
-            cout << "Dev mode activated.";
+            cout << "Dev mode activated." << endl;
+        }
+        else if (input == "lab") {
+            cout << "===== LAB =====" << endl;
+            cout << "1: Calculate" << endl;
+            cout << "2: Theories" << endl;
+            cout << "3: Prime Factory" << endl;
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
