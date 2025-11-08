@@ -16,9 +16,6 @@
 #include <curl/curl.h>
 #include <json/json.h>
 #include <nlohmann/json.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
 #include <optional>
 #include <filesystem> 
 
