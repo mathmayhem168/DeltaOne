@@ -32,3 +32,4 @@ Esc
 exit
 set uptime
 exit
+exit

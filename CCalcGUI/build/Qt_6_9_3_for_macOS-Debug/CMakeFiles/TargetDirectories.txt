@@ -1,0 +1,9 @@
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/CCalcGUI.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/edit_cache.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/rebuild_cache.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/list_install_components.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/install.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/install/local.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/install/strip.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/CCalcGUI_autogen_timestamp_deps.dir
+/Users/dionysiospeichen/Desktop/CCalcGUI/build/Qt_6_9_3_for_macOS-Debug/CMakeFiles/CCalcGUI_autogen.dir
