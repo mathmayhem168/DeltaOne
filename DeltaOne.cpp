@@ -369,9 +369,49 @@ int main() {
         }
         else if (input == "lab") {
             cout << "===== LAB =====" << endl;
-            cout << "1: Calculate" << endl;
-            cout << "2: Theories" << endl;
-            cout << "3: Prime Factory" << endl;
+            cout << "1: Calculate Expression" << endl;
+            cout << "2: Prime Factory" << endl;
+            cout << "3: Function Intelligence Lab (FIL)" << endl;
+            cout << "Choose: ";
+            int choice;
+            cin >> choice;
+            cin.ignore();
+
+            if (choice == 1) {
+                bool using_web;
+                cout << "Enter an expression (like 2 + 8 * 6): ";
+                string raw_exp;
+                cin >> raw_exp;
+                cin.ignore();
+                cout << "Use the web? ";
+                string web;
+                cin >> web;
+                cin.ignore();
+                if (web == "y" || web == "Y") {
+                    using_web = true;
+                }
+                if (web == "n" || web == "N") {
+                    using_web = false;
+                }
+                if (using_web) {
+                    for (auto& c : raw_exp)
+                        if (c == ' ') c = '+';
+                    string url = "https://api.duckduckgo.com/?q=" + raw_exp + "&format=json";
+                    string result = http_get(url);
+
+                    json j = json::parse(result, nullptr, false);
+                    if (j.is_discarded()) {
+                        cout << "Failed to search on the web." << endl;
+                    }
+                    string answer = j.value("AbstractText", "");
+                    string source = j.value("AbstractURL", "");
+                    if (answer.empty()) {
+                        answer = "No fast answer found.";
+                    }
+                    cout << "Result: " << answer << endl;
+                    cout << "Source: " << source << endl;
+                }
+            }
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
