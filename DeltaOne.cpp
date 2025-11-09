@@ -380,8 +380,8 @@ int main() {
                 getline(cin, query);
                 cout << "🌐 Opening Google: " << query << endl;
                 system(("open \"" + query + "\"").c_str());    // for Mac only.  
-            }     
-                                                                // If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str());
+            }      
+                                                                /* If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str()); */
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
