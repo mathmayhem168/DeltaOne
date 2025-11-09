@@ -186,6 +186,32 @@ void help_menu() {
     cout << "- Dionysios Pei-Chen Yi, 9 yrs old, 2016-???" << endl;
 }
 
+bool isPrime(int n) {
+    if (n <= 1) {
+        return false;
+    }
+    if (n == 2 || n == 3) {
+        return true;
+    }
+    if (n % 2 == 0) {
+        return false;   // Even numbers >2 are not prime.
+    }
+    // Test divisbility for 3 to sqrt(n)
+    for (int i = 3; i <= floor(sqrt(n)); i += 2) {
+        if (floor(n / i) == n / i) {
+            return false;    // In this case there is a divisor found, therefore it is not prime
+        }
+    }
+    return true;     // If n was not prime, it would already be returned so we can put this here
+}
+
+
+
+
+
+
+
+
 
 
 // === Main ===
@@ -379,10 +405,11 @@ int main() {
                 cout << "Enter your question or expression: ";
                 getline(cin, query);
                 cout << "🌐 Opening Google: " << query << endl;
-                system(("open \"" + query + "\"").c_str());    // for Mac only.  
+                system(("open \"" + query + "\"").c_str());    // for Mac only. If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str()); 
             }      
-                                                                /* If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str()); */
-        }
+            else if (choice == 2) {
+
+            }                                                    
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
