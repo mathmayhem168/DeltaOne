@@ -18,7 +18,7 @@
 #include <nlohmann/json.hpp>
 #include <optional>
 #include <filesystem> 
-
+#include <deque>
 
 
 
@@ -434,8 +434,41 @@ int main() {
                             cout << "The number " << n << " is not prime." << endl;
                         }
                     }
-                }
-            }                                                    
+                    else if (lab_input == "2") {
+                        bool on = true;
+                        while (on) {
+                            cout << "Enter a positive integer: ";
+                            int n2;
+                            cin >> n2;
+                            if (n2 <= 0 || n2 == 1) {
+                                cout << "This number is not allowed." << endl;
+                                cout << "Try again? (y/n): ";
+                                string input_yn;
+                                cin >> input_yn;
+                                if (input_yn == "y") {
+                                    bool on = true;
+                                }
+                                else if (input_yn == "n") {
+                                    bool on = false;
+                                }
+                            }
+                            if (n2 == 2) {
+                                cout << "The table of primes is only 2." << endl;
+                            }
+                            vector<int> prime_list;
+                            for (int i = n2; i >= 2; i -= 1) {
+                                if (i % 2 == 0) {
+                                    continue;
+                                }
+                                if (isPrime(i)) {
+                                    prime_list.push_back(i);
+                                }
+                                else {
+                                    continue;
+                                }
+                            } 
+                        }
+                    }                                              
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
