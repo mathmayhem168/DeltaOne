@@ -364,7 +364,7 @@ int main() {
             dev_mode = true;
             cout << "Dev mode activated." << endl;
         }
-        else if (input == "lab") {
+        else if (input == "lab") {              
             cout << "===== LAB =====" << endl;
             cout << "1: Calculate Expression" << endl;
             cout << "2: Prime Factory" << endl;
@@ -378,15 +378,9 @@ int main() {
                 string query;
                 cout << "Enter your question or expression: ";
                 getline(cin, query);
-
-                // Replace spaces with '+'
-                for (auto &c : query)
-                    if (c == ' ') c = '+';
-
-                string url = "https://www.google.com/search?q=" + query;
-                cout << "🌐 Opening Google: " << url << endl;
-                system(("open \"" + url + "\"").c_str()); // works on macOS
-            }
+                cout << "🌐 Opening Google: " << query << endl;
+                system(("open \"" + query + "\"").c_str());    // for Mac only.  
+            }                                                  // If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str());
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
