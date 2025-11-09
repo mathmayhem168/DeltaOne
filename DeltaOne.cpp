@@ -408,7 +408,33 @@ int main() {
                 system(("open \"" + query + "\"").c_str());    // for Mac only. If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str()); 
             }      
             else if (choice == 2) {
-
+                cout << "1. Prime Analyzer        - Test if a number is prime\n";
+                cout << "2. Prime Generator       - Generate primes up to a limit\n";
+                cout << "3. Prime Decomposer      - Factor a number into primes\n";
+                cout << "4. Pattern Detector      - Find twin or cousin primes\n";
+                cout << "5. Formula Tester        - Evaluate custom prime formulas\n";
+                cout << "6. Randomness Scanner    - Analyze gaps between primes\n";
+                cout << "7. Cipher Room           - Encode/decode with prime keys\n";
+                cout << "8. Portal Connections    - Link to other labs\n";
+                cout << "9. Help / Info           - About Prime Factory\n";
+                cout << "10. Exit Prime Factory\n";
+                cout << "----------------------------------\n";
+                cout << "Enter your choice (1-10): ";
+                static string lab_input;
+                while (true) {
+                    getline(cin, lab_input);
+                    if (lab_input == "1") {
+                        cout << "Enter a positive integer: ";
+                        int n;
+                        cin >> n;
+                        if (isPrime(n)) {
+                            cout << "The number " << n << " is prime." << endl;
+                        }
+                        else {
+                            cout << "The number " << n << " is not prime." << endl;
+                        }
+                    }
+                }
             }                                                    
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
