@@ -370,42 +370,22 @@ int main() {
             cout << "2: Prime Factory" << endl;
             cout << "3: Function Intelligence Lab (FIL)" << endl;
             cout << "Choose: ";
-
             int choice;
             cin >> choice;
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            cin.ignore();
 
             if (choice == 1) {
-                bool using_web = false;
-                cout << "Enter an expression (like 2 + 8 * 6): ";
-                string raw_exp;
-                getline(cin, raw_exp); // ✅ allows spaces properly
+                string query;
+                cout << "Enter your question or expression: ";
+                getline(cin, query);
 
-                cout << "Use the web? (y/n): ";
-                string web;
-                getline(cin, web); // ✅ use getline to avoid skipping
+                // Replace spaces with '+'
+                for (auto &c : query)
+                    if (c == ' ') c = '+';
 
-                if (web == "y" || web == "Y") using_web = true;
-
-                if (using_web) {
-                    for (auto& c : raw_exp)
-                        if (c == ' ') c = '+';
-                    string url = "https://api.duckduckgo.com/?q=" + raw_exp + "&format=json";
-                    string result = http_get(url);
-
-                    json j = json::parse(result, nullptr, false);
-                    if (j.is_discarded()) {
-                        cout << "Failed to search on the web." << endl;
-                    } else {
-                        string answer = j.value("AbstractText", "");
-                        string source = j.value("AbstractURL", "");
-                        if (answer.empty()) answer = "No fast answer found.";
-                        cout << "Result: " << answer << endl;
-                        cout << "Source: " << source << endl;
-                    }
-                } else {
-                    cout << "Offline mode activated." << endl;
-                }
+                string url = "https://www.google.com/search?q=" + query;
+                cout << "🌐 Opening Google: " << url << endl;
+                system(("open \"" + url + "\"").c_str()); // works on macOS
             }
         }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
