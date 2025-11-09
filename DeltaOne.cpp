@@ -370,26 +370,23 @@ int main() {
             cout << "2: Prime Factory" << endl;
             cout << "3: Function Intelligence Lab (FIL)" << endl;
             cout << "Choose: ";
+
             int choice;
             cin >> choice;
-            cin.ignore();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
 
             if (choice == 1) {
-                bool using_web;
+                bool using_web = false;
                 cout << "Enter an expression (like 2 + 8 * 6): ";
                 string raw_exp;
-                cin >> raw_exp;
-                cin.ignore();
-                cout << "Use the web? ";
+                getline(cin, raw_exp); // ✅ allows spaces properly
+
+                cout << "Use the web? (y/n): ";
                 string web;
-                cin >> web;
-                cin.ignore();
-                if (web == "y" || web == "Y") {
-                    using_web = true;
-                }
-                if (web == "n" || web == "N") {
-                    using_web = false;
-                }
+                getline(cin, web); // ✅ use getline to avoid skipping
+
+                if (web == "y" || web == "Y") using_web = true;
+
                 if (using_web) {
                     for (auto& c : raw_exp)
                         if (c == ' ') c = '+';
@@ -399,14 +396,15 @@ int main() {
                     json j = json::parse(result, nullptr, false);
                     if (j.is_discarded()) {
                         cout << "Failed to search on the web." << endl;
+                    } else {
+                        string answer = j.value("AbstractText", "");
+                        string source = j.value("AbstractURL", "");
+                        if (answer.empty()) answer = "No fast answer found.";
+                        cout << "Result: " << answer << endl;
+                        cout << "Source: " << source << endl;
                     }
-                    string answer = j.value("AbstractText", "");
-                    string source = j.value("AbstractURL", "");
-                    if (answer.empty()) {
-                        answer = "No fast answer found.";
-                    }
-                    cout << "Result: " << answer << endl;
-                    cout << "Source: " << source << endl;
+                } else {
+                    cout << "Offline mode activated." << endl;
                 }
             }
         }
