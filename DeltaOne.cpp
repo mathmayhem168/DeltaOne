@@ -468,7 +468,10 @@ int main() {
                                 }
                             } 
                         }
-                    }                                              
+                    }            
+                }
+            }
+        }                                  
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
