@@ -1,0 +1,243 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+
+
+
+
+using namespace std;
+
+
+
+
+
+
+
+
+
+
+
+// This is a program with a lot of algorithms having to do with math/data.
+
+// ===== CS ==========
+
+long binaryToDecimal(string binary) {
+    long value = 0;
+    for (char c : binary) {
+        int bit = c - '0';
+        value = value * 2 + bit;
+    }
+    return value;
+}
+
+string dec_bin(long long n) {
+    string result;
+    if (n <= 0) {
+        return "0";
+    }
+
+    vector<bool> bits;
+
+    while (n > 0) {
+        bits.push_back(n % 2 == 1);
+        n /= 2;
+    }
+
+    for (int i = bits.size() - 1; i >= 0; i--) {
+        result += (bits[i] ? '1' : '0');
+    }
+
+    return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ======= MATH ============
+
+// ==== NUMERICAL/CALCULUS =====
+
+long gcd(long a, long b) {
+    while (b != 0) {
+        long temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+
+long amounting(int x, int y) {
+    if (y < 0) {
+        cout << "Error: y is smaller than 0." << endl;
+    }
+    if (y == 0) {
+        return 1;
+    }
+    if (y % 2 == 0) {
+        long new_x = x * x;
+        long new_y = y / 2;
+        return amounting(new_x, new_y);
+    }
+    else {
+        long new_x = x * x;
+        long new_y = (y - 1) / 2;
+        return amounting(new_x, new_y) * x;
+    }
+}
+
+int lastDigit(int a, int b) {
+    return (a * b) % 10;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =========== DATA ========
+
+// === Sorting =========
+
+vector<double> selectionSort(vector<double> nums) {
+    for (int i = 0; i < nums.size() - 1; i++) {
+        int minIndex = i;
+
+        for (int j = i + 1; j < nums.size(); j++) {
+            if (nums[j] < nums[minIndex]) {
+                minIndex = j;
+            }
+        }
+
+        double temp = nums[i];        // must be double
+        nums[i] = nums[minIndex];
+        nums[minIndex] = temp;
+    }
+
+    return nums;
+}
+
+
+
+bool isSorted(const vector<double>& nums) {
+    // A list with 0 or 1 elements is always sorted
+    if (nums.size() <= 1) {
+        return true;
+    }
+
+    for (size_t i = 0; i < nums.size() - 1; i++) {
+        if (nums[i] > nums[i + 1]) {
+            return false;   
+        }
+    }
+
+    return true;    
+}
+
+
+
+
+
+
+
+
+
+
+
+// ===== Searching ===== 
+
+double linearSearch(vector<double> nums, double target) {
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == target) {
+            cout << "The target " << target << " was found at index: " << i << endl;
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
+int binarySearch(vector<double> nums, double target) {
+    if (!isSorted(nums)) {
+        nums = selectionSort(nums);
+    }
+
+    int left = 0;
+    int right = nums.size() - 1;
+
+    while (left <= right) {
+        int mid = (left + right) / 2;
+
+        if (nums[mid] == target) {
+            return mid;
+        }
+        else if (nums[mid] < target) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+
+    return -1;
+}
+
+
+
+
+
+// temporary test
+
+
+int main() {
+    vector<double> list = {1, 2, 3, 4};
+    vector<double> list2 = {1, 9, 4, 5};
+    cout << "The last digit of 7 * 9 is: " << lastDigit(7, 9) << endl;
+    cout << "Searching for 1 in the list of 1, 2, 3, 4.." << endl;
+    cout << linearSearch(list, 1) << endl;
+    cout << "Sorting the list 1, 9, 4, 5.." << endl;
+    vector<double> list3 = selectionSort(list2);
+    cout << list3[0] << list3[1] << list3[2] << list3[3] << endl;
+    cout << "The GCD of 12 and 8 is: " << gcd(12, 8) << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
