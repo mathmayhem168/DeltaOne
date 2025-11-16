@@ -577,6 +577,35 @@ int main() {
             system((string(editor) + " " + filename).c_str());
             cout << "✓ Returned to DeltaOne." << endl;
         }
+        else if (input == "games") {
+            cout << "=== Mini Games ===" << endl;
+            cout << "1: Number Guessing" << endl;
+            cout << "2: Rock Paper Scissors" << endl;
+            cout << "3: Hangman (text)" << endl;
+            int choice;
+            cin >> choice;
+            cin.ignore();
+            
+            if (choice == 1) {
+                // Number guessing game
+                int secret = randomnum(1, 100);
+                int guesses = 0;
+                cout << "I'm thinking of a number 1-100..." << endl;
+                while (true) {
+                    int guess;
+                    cin >> guess;
+                    guesses++;
+                    if (guess == secret) {
+                        cout << "🎉 Correct in " << guesses << " tries!" << endl;
+                        break;
+                    } else if (guess < secret) {
+                        cout << "📈 Higher!" << endl;
+                    } else {
+                        cout << "📉 Lower!" << endl;
+                    }
+                }
+            }
+        }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
