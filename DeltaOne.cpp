@@ -405,73 +405,160 @@ int main() {
                 cout << "Enter your question or expression: ";
                 getline(cin, query);
                 cout << "🌐 Opening Google: " << query << endl;
-                system(("open \"" + query + "\"").c_str());    // for Mac only. If you are on Windows or Linux, change to this: Windows: system(("start " + url).c_str()); Linux: system(("xdg-open " + url).c_str()); 
+                system(("open \"https://www.google.com/search?q=" + query + "\"").c_str());
             }      
             else if (choice == 2) {
-                cout << "1. Prime Analyzer        - Test if a number is prime\n";
-                cout << "2. Prime Generator       - Generate primes up to a limit\n";
-                cout << "3. Prime Decomposer      - Factor a number into primes\n";
-                cout << "4. Pattern Detector      - Find twin or cousin primes\n";
-                cout << "5. Formula Tester        - Evaluate custom prime formulas\n";
-                cout << "6. Randomness Scanner    - Analyze gaps between primes\n";
-                cout << "7. Cipher Room           - Encode/decode with prime keys\n";
-                cout << "8. Portal Connections    - Link to other labs\n";
-                cout << "9. Help / Info           - About Prime Factory\n";
-                cout << "10. Exit Prime Factory\n";
-                cout << "----------------------------------\n";
-                cout << "Enter your choice (1-10): ";
-                static string lab_input;
-                while (true) {
+                // PRIME FACTORY
+                bool factory_running = true;
+                while (factory_running) {
+                    cout << "\n===== PRIME FACTORY =====" << endl;
+                    cout << "1. Prime Analyzer        - Test if a number is prime\n";
+                    cout << "2. Prime Generator       - Generate primes up to a limit\n";
+                    cout << "3. Prime Decomposer      - Factor a number into primes\n";
+                    cout << "4. Pattern Detector      - Find twin primes\n";
+                    cout << "5. Prime Counter         - Count primes in range\n";
+                    cout << "6. Exit Prime Factory\n";
+                    cout << "----------------------------------\n";
+                    cout << "Enter your choice (1-6): ";
+                    
+                    string lab_input;
                     getline(cin, lab_input);
+                    
                     if (lab_input == "1") {
+                        // PRIME ANALYZER
                         cout << "Enter a positive integer: ";
                         int n;
                         cin >> n;
+                        cin.ignore();
+                        
                         if (isPrime(n)) {
-                            cout << "The number " << n << " is prime." << endl;
+                            cout << "✓ The number " << n << " is PRIME." << endl;
                         }
                         else {
-                            cout << "The number " << n << " is not prime." << endl;
+                            cout << "✗ The number " << n << " is NOT prime." << endl;
                         }
                     }
                     else if (lab_input == "2") {
-                        bool on = true;
-                        while (on) {
-                            cout << "Enter a positive integer: ";
-                            int n2;
-                            cin >> n2;
-                            if (n2 <= 0 || n2 == 1) {
-                                cout << "This number is not allowed." << endl;
-                                cout << "Try again? (y/n): ";
-                                string input_yn;
-                                cin >> input_yn;
-                                if (input_yn == "y") {
-                                    bool on = true;
-                                }
-                                else if (input_yn == "n") {
-                                    bool on = false;
-                                }
-                            }
-                            if (n2 == 2) {
-                                cout << "The table of primes is only 2." << endl;
-                            }
-                            vector<int> prime_list;
-                            for (int i = n2; i >= 2; i -= 1) {
-                                if (i % 2 == 0) {
-                                    continue;
-                                }
-                                if (isPrime(i)) {
-                                    prime_list.push_back(i);
-                                }
-                                else {
-                                    continue;
-                                }
-                            } 
+                        // PRIME GENERATOR
+                        cout << "Generate all primes up to: ";
+                        int limit;
+                        cin >> limit;
+                        cin.ignore();
+                        
+                        if (limit < 2) {
+                            cout << "No primes below 2." << endl;
+                            continue;
                         }
-                    }            
+                        
+                        cout << "Primes up to " << limit << ":" << endl;
+                        vector<int> primes;
+                        
+                        for (int i = 2; i <= limit; i++) {
+                            if (isPrime(i)) {
+                                primes.push_back(i);
+                            }
+                        }
+                        
+                        // Print primes nicely
+                        for (int i = 0; i < primes.size(); i++) {
+                            cout << primes[i];
+                            if (i < primes.size() - 1) cout << ", ";
+                            if ((i + 1) % 10 == 0) cout << endl;  // New line every 10
+                        }
+                        cout << endl;
+                        cout << "Total: " << primes.size() << " primes found." << endl;
+                    }
+                    else if (lab_input == "3") {
+                        // PRIME DECOMPOSER (Prime Factorization)
+                        cout << "Enter a number to factorize: ";
+                        int n;
+                        cin >> n;
+                        cin.ignore();
+                        
+                        if (n < 2) {
+                            cout << "Cannot factorize numbers less than 2." << endl;
+                            continue;
+                        }
+                        
+                        cout << n << " = ";
+                        vector<int> factors;
+                        int temp = n;
+                        
+                        // Find all prime factors
+                        for (int i = 2; i <= temp; i++) {
+                            while (temp % i == 0) {
+                                factors.push_back(i);
+                                temp /= i;
+                            }
+                        }
+                        
+                        // Print factors
+                        for (int i = 0; i < factors.size(); i++) {
+                            cout << factors[i];
+                            if (i < factors.size() - 1) cout << " × ";
+                        }
+                        cout << endl;
+                    }
+                    else if (lab_input == "4") {
+                        // PATTERN DETECTOR (Twin Primes)
+                        cout << "Find twin primes up to: ";
+                        int limit;
+                        cin >> limit;
+                        cin.ignore();
+                        
+                        cout << "Twin primes (primes that differ by 2):" << endl;
+                        int count = 0;
+                        
+                        for (int i = 2; i <= limit - 2; i++) {
+                            if (isPrime(i) && isPrime(i + 2)) {
+                                cout << "(" << i << ", " << (i + 2) << ")" << endl;
+                                count++;
+                            }
+                        }
+                        
+                        cout << "Found " << count << " twin prime pairs." << endl;
+                    }
+                    else if (lab_input == "5") {
+                        // PRIME COUNTER
+                        cout << "Count primes from: ";
+                        int start;
+                        cin >> start;
+                        cout << "Count primes to: ";
+                        int end;
+                        cin >> end;
+                        cin.ignore();
+                        
+                        int count = 0;
+                        for (int i = start; i <= end; i++) {
+                            if (isPrime(i)) count++;
+                        }
+                        
+                        cout << "There are " << count << " primes between " 
+                            << start << " and " << end << "." << endl;
+                    }
+                    else if (lab_input == "6") {
+                        // EXIT
+                        cout << "Exiting Prime Factory..." << endl;
+                        factory_running = false;
+                    }
+                    else {
+                        cout << "Invalid choice. Try again." << endl;
+                    }
                 }
             }
-        }           
+            else if (choice == 3) {
+                // FUNCTION INTELLIGENCE LAB (You can add your derivative/vertex functions here!)
+                cout << "🧪 Function Intelligence Lab - Coming Soon!" << endl;
+                cout << "This will have calculus functions like:" << endl;
+                cout << "- Derivative calculator" << endl;
+                cout << "- Vertex finder" << endl;
+                cout << "- Root solver" << endl;
+                cout << "- Integration" << endl;
+            }
+            else {
+                cout << "Invalid lab choice." << endl;
+            }
+        }
         else if (input.rfind("nano ", 0) == 0) {
             string filename = input.substr(5);
             system(("nano " + filename).c_str());
