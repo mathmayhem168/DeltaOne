@@ -277,6 +277,10 @@ int binarySearch(vector<double> nums, double target) {
 
 
 int main() {
+    auto f = [](double x) {
+        return x * x;
+    };
+    auto df = derivative(f);
     vector<double> list = {1, 2, 3, 4};
     vector<double> list2 = {1, 9, 4, 5};
     cout << "The last digit of 7 * 9 is: " << lastDigit(7, 9) << endl;
@@ -286,6 +290,7 @@ int main() {
     vector<double> list3 = selectionSort(list2);
     cout << list3[0] << list3[1] << list3[2] << list3[3] << endl;
     cout << "The GCD of 12 and 8 is: " << gcd(12, 8) << endl;
+    cout << "The derivative of x squared is: " << df(4) << " at 4." << endl;
 }
 
 

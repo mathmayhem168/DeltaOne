@@ -471,7 +471,25 @@ int main() {
                     }            
                 }
             }
-        }                                  
+        }           
+        else if (input.rfind("nano ", 0) == 0) {
+            string filename = input.substr(5);
+            system(("nano " + filename).c_str());
+            cout << "Back to DeltaOne." << endl;
+        }     
+        else if (input.rfind("vim ", 0) == 0) {
+            string filename = input.substr(4);
+            system(("vim " + filename).c_str());
+            cout << "Returned to DeltaOne. (no longer a caveman!)" << endl;
+        }
+        else if (input.rfind("edit ", 0) == 0) {
+            string filename = input.substr(5);
+            // Use default editor from environment, or fallback to nano
+            const char* editor = getenv("EDITOR");
+            if (editor == nullptr) editor = "nano";
+            system((string(editor) + " " + filename).c_str());
+            cout << "✓ Returned to DeltaOne." << endl;
+        }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
