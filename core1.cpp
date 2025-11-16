@@ -51,6 +51,22 @@ string dec_bin(long long n) {
     return result;
 }
 
+int countOnes(string n) {
+    int count = 0;
+    
+    for (char c : n) {
+        if (c == '1') {
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+
+
+
+
 
 
 
@@ -103,6 +119,48 @@ int lastDigit(int a, int b) {
     return (a * b) % 10;
 }
 
+
+function<double(double)> derivative(function<double(double)> f, double h = 0.0001) {
+    return [f, h](double x) {
+        return (f(x + h) - f(x - h)) / (2.0 * h);
+    };
+}
+
+
+
+
+
+
+
+long findVertexX(function<double(double)> f, double initialGuess, double tol = 1e-6) {
+    // Get derivative
+    auto df = derivative(f);
+    
+    double x = initialGuess;
+    int maxIter = 100;
+    double h = 0.0001;
+    
+    for (int i = 0; i < maxIter; i++) {
+        double dfx = df(x);
+        
+        // Found critical point where derivative = 0
+        if (abs(dfx) < tol) {
+            return (long)round(x);  // Convert to long and return
+        }
+        
+        // Numerical second derivative
+        double d2fx = (df(x + h) - df(x - h)) / (2.0 * h);
+        
+        if (abs(d2fx) < 1e-10) {
+            break;
+        }
+        
+        // Newton-Raphson step
+        x = x - dfx / d2fx;
+    }
+    
+    return (long)round(x);  // Return best approximation
+}
 
 
 
