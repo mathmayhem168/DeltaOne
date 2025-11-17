@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib> 
-#include <string>
 #include <sstream>
 #include <unistd.h>
 #include <chrono>
@@ -16,19 +15,51 @@
 #include <curl/curl.h>
 #include <json/json.h>
 #include <nlohmann/json.hpp>
-#include <optional>
-#include <filesystem> 
+#include <optional> 
 #include <deque>
 #include <map>
 
 
+// Also, sorry about the clear and terminal inputs, they only work for Mac and Linux. 😅
+// Honestly, I was too lazy. But could you blame me if you made the 1000 lines of code?
+
+
+
+
+using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::vector;
+using std::map;
+using std::ifstream;
+using std::ofstream;
+using std::getline;
+using std::stoi;
+using std::stod;
+using std::stringstream;
+using std::istringstream;
+using std::ostringstream;
+using std::this_thread::sleep_for;
+using std::chrono::seconds;
+using std::chrono::milliseconds;
+using std::chrono::duration;
+using std::chrono::steady_clock;
+using std::chrono::high_resolution_clock;
+using std::random_device;
+using std::mt19937;
+using std::uniform_int_distribution;
+using std::time;
+using std::pair;
+using std::make_pair;
 
 
 
 
 
 
-using namespace std;
+
+
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
     size_t totalSize = size * nmemb;
@@ -269,7 +300,7 @@ bool isPrime(int n) {
     }
     // Test divisbility for 3 to sqrt(n)
     for (int i = 3; i <= floor(sqrt(n)); i += 2) {
-        if (floor(n / i) == n / i) {
+        if (n % i == 0) {
             return false;    // In this case there is a divisor found, therefore it is not prime
         }
     }
@@ -287,7 +318,7 @@ bool isPrime(int n) {
 
 // === Main ===
 int main() {
-    
+    load_deltacore();
     string atIdentity = getUserHost();   // Finds the hostname using getUserHost()
 
     cout << "=== DeltaOne ======" << endl;
@@ -310,11 +341,16 @@ int main() {
             if (history_list.size() > MAX_HISTORY)
                 history_list.erase(history_list.begin()); // remove oldest
         }
+        string original_input = input;
+        if (aliases.find(input) != aliases.end()) {
+            cout << "Running alias: " << aliases[input] << endl;
+            input = aliases[input];
+        }
         // Branches of input/output flows
 
         if (input == "exit") {
             cout << "Exiting DeltaOne..." << endl;
-            this_thread::sleep_for(chrono::duration<double>(delayShutSec)); // sleeps for the metric delayShutSec seconds.
+            std::this_thread::sleep_for(std::chrono::duration<double>(delayShutSec)); // sleeps for the metric delayShutSec seconds.
             break; // stop loop
         }
         else if (input.rfind("echo ", 0) == 0) {                // Detects if the user typed "echo"
