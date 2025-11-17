@@ -23,7 +23,7 @@
 // Also, sorry about the clear and terminal inputs, they only work for Mac and Linux. 😅
 // Honestly, I was too lazy. But could you blame me if you made the 1000 lines of code?
 
-
+// TODO: omg this is my first todo list
 
 
 using std::string;
@@ -50,9 +50,14 @@ using std::make_pair;
 
 
 
+struct Task {
+    std::string text;
+    bool done;
 
-
-
+    string toString() const {
+        return text + " | " + (done ? "DONE" : "TODO");
+    }
+};
 
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
@@ -60,6 +65,15 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
     output->append((char*)contents, totalSize);
     return totalSize;
 }
+
+void delete_task(std::vector<Task>& list, int index) {
+    if (index < 0 || index >= list.size()) {
+        std::cout << "Invalid index\n";
+        return;
+    }
+    list.erase(list.begin() + index);
+}
+
 
 
 
@@ -134,6 +148,15 @@ void load_deltacore() {
 
 
 // Important stuff and declarations
+
+
+
+
+vector<Task> todo_list;     // woww super cool
+
+
+
+
 
 vector<string> history_list;
 const size_t MAX_HISTORY = 100;     // Metric for max history entries
@@ -269,6 +292,17 @@ void get_weather(const std::string& city) {
 
 bool dev_mode = true;      // Dev Mode!!!!!!
 const string secret_path = "Vjbdsfjbhsdfbjsadkfjbsadfbasjfjbdsjkbdfe(&8$:+(#9&:#(-";
+
+
+void mark_as_done(std::vector<Task>& list, int index) {
+    if (index < 0 || index >= list.size()) {
+        std::cout << "Invalid index\n";
+        return;
+    }
+    list[index].done = true;
+}
+
+
 
 
 // Help menu
@@ -702,6 +736,41 @@ int main() {
                     } else {
                         cout << "📉 Lower!" << endl;
                     }
+                }
+            }
+        }
+        else if (input == "todo") {
+            while (true) {
+                cout << "Welcome to Todo!" << endl;
+                cout << "1: Show Tasks" << endl;
+                cout << "2: Delete Tasks" << endl;
+                cout << "3: Add Tasks" << endl;
+                cout << "4: Mark As Done" << endl;
+                cout << "5: Exit" << endl;
+                int choice;
+                cin >> choice;     // Note: There's no spaces in the integer, right???
+                if (choice == 1) {
+                    void print_tasks(const std::vector<Task>& list);
+                    for (int i = 0; i < todo_list.size(); i++) {
+                        std::cout << i+1 << ". ";
+                        if (todo_list[i].done) std::cout << "[x] ";
+                        else std::cout << "[ ] ";
+                        std::cout << todo_list[i].text << "\n";
+                    }
+                }
+                else if (choice == 2) {
+                    cout << "What tasks to delete?" << endl;
+                    for (int i = 0; i < todo_list.size(); i++) {
+                        cout << todo_list[i].toString() << endl;
+                    }
+                    int delete_task;
+                    cin >> delete_task;
+                    int index = delete_task - 1;       // To break confusion later
+                    if (index > 0 || index >= todo_list.size()) {
+                        cout << "Invalid option/index." << endl;
+                        return;
+                    }
+                    todo_list.erase(todo_list.begin() + index);
                 }
             }
         }
