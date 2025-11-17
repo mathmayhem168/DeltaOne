@@ -19,6 +19,7 @@
 #include <optional>
 #include <filesystem> 
 #include <deque>
+#include <map>
 
 
 
@@ -26,7 +27,6 @@
 
 
 
-using json = nlohmann::json;
 
 using namespace std;
 
@@ -35,6 +35,77 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
     output->append((char*)contents, totalSize);
     return totalSize;
 }
+
+
+
+map<string, string> aliases;
+map<string, string> env_vars;
+
+void load_deltacore() {
+    string home = getenv("HOME");
+    string deltacore_path = home + "/.deltacore";
+    
+    ifstream config(deltacore_path);
+    if (!config.is_open()) {
+        // First time - create default config
+        ofstream new_config(deltacore_path);
+        new_config << "# DeltaOne Configuration File" << endl;
+        new_config << "# Aliases: alias name='command'" << endl;
+        new_config << "# Variables: export VAR='value'" << endl;
+        new_config << endl;
+        new_config << "# Example:" << endl;
+        new_config << "# alias ll='ls -la'" << endl;
+        new_config.close();
+        std::cout << "✓ Created ~/.deltacore config file" << endl;
+        return;
+    }
+    
+    string line;
+    while (getline(config, line)) {
+        // Skip comments and empty lines
+        if (line.empty() || line[0] == '#') continue;
+        
+        // Parse alias: alias name='command'
+        if (line.rfind("alias ", 0) == 0) {
+            size_t eq = line.find('=');
+            if (eq != string::npos) {
+                string name = line.substr(6, eq - 6);
+                string cmd = line.substr(eq + 1);
+                
+                // Remove quotes
+                if (cmd.size() >= 2 && cmd.front() == '\'' && cmd.back() == '\'') {
+                    cmd = cmd.substr(1, cmd.size() - 2);
+                }
+                
+                aliases[name] = cmd;
+                std::cout << "Loaded alias: " << name << " -> " << cmd << endl;
+            }
+        }
+        
+        // Parse export: export VAR='value'
+        else if (line.rfind("export ", 0) == 0) {
+            size_t eq = line.find('=');
+            if (eq != string::npos) {
+                string key = line.substr(7, eq - 7);
+                string value = line.substr(eq + 1);
+                
+                // Remove quotes
+                if (value.size() >= 2 && value.front() == '\'' && value.back() == '\'') {
+                    value = value.substr(1, value.size() - 2);
+                }
+                
+                env_vars[key] = value;
+                std::cout << "Loaded var: " << key << " = " << value << endl;
+            }
+        }
+    }
+    
+    config.close();
+}
+
+
+
+
 
 
 // Important stuff and declarations
@@ -92,7 +163,7 @@ int randomnum(int min, int max) {
 // === WEATHER SUPPORT ===
 
 
-
+using json = nlohmann::json;
 
 std::string http_get(const std::string& url) {
     CURL* curl = curl_easy_init();
@@ -229,7 +300,7 @@ int main() {
     while (getline(fin, line)) history_list.push_back(line);
     fin.close();
 
-
+    // ALIASES!!!!!    :)
     while (true) {
         cout << "DeltaOne > ";
         string input;
@@ -239,7 +310,6 @@ int main() {
             if (history_list.size() > MAX_HISTORY)
                 history_list.erase(history_list.begin()); // remove oldest
         }
-
         // Branches of input/output flows
 
         if (input == "exit") {
@@ -587,7 +657,6 @@ int main() {
             cin.ignore();
             
             if (choice == 1) {
-                // Number guessing game
                 int secret = randomnum(1, 100);
                 int guesses = 0;
                 cout << "I'm thinking of a number 1-100..." << endl;
