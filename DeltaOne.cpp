@@ -40,12 +40,6 @@ using std::stod;
 using std::stringstream;
 using std::istringstream;
 using std::ostringstream;
-using std::this_thread::sleep_for;
-using std::chrono::seconds;
-using std::chrono::milliseconds;
-using std::chrono::duration;
-using std::chrono::steady_clock;
-using std::chrono::high_resolution_clock;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
@@ -377,7 +371,7 @@ int main() {
         }
         else if (input.rfind("sleep ", 0) == 0) {
             int seconds = stoi(input.substr(6));
-            this_thread::sleep_for(chrono::seconds(seconds));
+            std::this_thread::sleep_for(std::chrono::duration<double>(delayShutSec));
             cout << "(slept for " << seconds << "s)" << endl;
         }
         else if (input == "time") {
@@ -488,7 +482,7 @@ int main() {
             cout << "Enter new uptime (seconds): ";
             long long new_time;
             cin >> new_time;
-            start_time = chrono::steady_clock::now() - chrono::seconds(new_time);
+            start_time = std::chrono::steady_clock::now() - std::chrono::seconds(new_time);
             cout << "1" << endl;
             cin.ignore();
         }
