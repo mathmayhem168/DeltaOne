@@ -20,6 +20,29 @@
 #include <map>
 
 
+struct Task {
+    string text;
+    bool done;
+    
+    Task(string t) : text(t), done(false) {}
+    
+    string toString() {
+        string status = done ? "[x]" : "[ ]";
+        return status + " " + text;
+    }
+};
+
+// Global todo list
+vector<Task> todo_list;
+
+
+
+
+
+
+
+
+
 // Also, sorry about the clear and terminal inputs, they only work for Mac and Linux. 😅
 // Honestly, I was too lazy. But could you blame me if you made the 1000 lines of code?
 
@@ -50,14 +73,7 @@ using std::make_pair;
 
 
 
-struct Task {
-    std::string text;
-    bool done;
 
-    string toString() const {
-        return text + " | " + (done ? "DONE" : "TODO");
-    }
-};
 
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
@@ -741,36 +757,97 @@ int main() {
         }
         else if (input == "todo") {
             while (true) {
-                cout << "Welcome to Todo!" << endl;
+                cout << "\n=== Todo List ===" << endl;
                 cout << "1: Show Tasks" << endl;
-                cout << "2: Delete Tasks" << endl;
-                cout << "3: Add Tasks" << endl;
-                cout << "4: Mark As Done" << endl;
+                cout << "2: Add Task" << endl;
+                cout << "3: Mark Done" << endl;
+                cout << "4: Delete Task" << endl;
                 cout << "5: Exit" << endl;
+                cout << "Choose: ";
+                
                 int choice;
-                cin >> choice;     // Note: There's no spaces in the integer, right???
+                cin >> choice;
+                cin.ignore();  // ← SUPER IMPORTANT! Clears the newline after cin
+                
                 if (choice == 1) {
-                    void print_tasks(const std::vector<Task>& list);
-                    for (int i = 0; i < todo_list.size(); i++) {
-                        std::cout << i+1 << ". ";
-                        if (todo_list[i].done) std::cout << "[x] ";
-                        else std::cout << "[ ] ";
-                        std::cout << todo_list[i].text << "\n";
+                    // Show all tasks
+                    if (todo_list.empty()) {
+                        cout << "No tasks yet!" << endl;
+                    } else {
+                        cout << "\n--- Your Tasks ---" << endl;
+                        for (int i = 0; i < todo_list.size(); i++) {
+                            cout << (i+1) << ". " << todo_list[i].toString() << endl;
+                        }
                     }
                 }
                 else if (choice == 2) {
-                    cout << "What tasks to delete?" << endl;
+                    // Add task
+                    cout << "Enter task: ";
+                    string task_text;
+                    getline(cin, task_text);
+                    
+                    if (!task_text.empty()) {
+                        todo_list.push_back(Task(task_text));
+                        cout << "✓ Task added!" << endl;
+                    }
+                }
+                else if (choice == 3) {
+                    // Mark as done
+                    if (todo_list.empty()) {
+                        cout << "No tasks to mark!" << endl;
+                        continue;
+                    }
+                    
+                    cout << "\n--- Your Tasks ---" << endl;
                     for (int i = 0; i < todo_list.size(); i++) {
-                        cout << todo_list[i].toString() << endl;
+                        cout << (i+1) << ". " << todo_list[i].toString() << endl;
                     }
-                    int delete_task;
-                    cin >> delete_task;
-                    int index = delete_task - 1;       // To break confusion later
-                    if (index > 0 || index >= todo_list.size()) {
-                        cout << "Invalid option/index." << endl;
-                        return;
+                    
+                    cout << "Which task to mark done? ";
+                    int task_num;
+                    cin >> task_num;
+                    cin.ignore();
+                    
+                    int index = task_num - 1;
+                    if (index >= 0 && index < todo_list.size()) {
+                        todo_list[index].done = true;
+                        cout << "✓ Marked as done!" << endl;
+                    } else {
+                        cout << "Invalid task number!" << endl;
                     }
-                    todo_list.erase(todo_list.begin() + index);
+                }
+                else if (choice == 4) {
+                    // Delete task
+                    if (todo_list.empty()) {
+                        cout << "No tasks to delete!" << endl;
+                        continue;
+                    }
+                    
+                    cout << "\n--- Your Tasks ---" << endl;
+                    for (int i = 0; i < todo_list.size(); i++) {
+                        cout << (i+1) << ". " << todo_list[i].toString() << endl;
+                    }
+                    
+                    cout << "Which task to delete? ";
+                    int task_num;
+                    cin >> task_num;
+                    cin.ignore();
+                    
+                    int index = task_num - 1;
+                    if (index >= 0 && index < todo_list.size()) {
+                        cout << "Deleted: " << todo_list[index].text << endl;
+                        todo_list.erase(todo_list.begin() + index);
+                    } else {
+                        cout << "Invalid task number!" << endl;
+                    }
+                }
+                else if (choice == 5) {
+                    // Exit
+                    cout << "Exiting Todo..." << endl;
+                    break;
+                }
+                else {
+                    cout << "Invalid choice!" << endl;
                 }
             }
         }
