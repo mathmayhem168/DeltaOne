@@ -851,6 +851,52 @@ int main() {
                 }
             }
         }
+        else if (input == "sysinfo") {
+            cout << "=== System Information ===" << endl;
+            system("uname -a");  // OS info
+            cout << "\nCPU:" << endl;
+            system("sysctl -n machdep.cpu.brand_string");  // macOS
+            cout << "\nMemory:" << endl;
+            system("top -l 1 | head -n 10 | grep PhysMem");
+        }
+        else if (input == "disk") {
+            system("df -h");
+        }
+        else if (input == "pwd") {
+            char cwd[1024];
+            getcwd(cwd, sizeof(cwd));
+            cout << cwd << endl;
+        }
+        else if (input.rfind("cd ", 0) == 0) {
+            string path = input.substr(3);
+            if (chdir(path.c_str()) == 0) {
+                cout << "✓ Changed directory" << endl;
+            } else {
+                cout << "✗ Directory not found" << endl;
+            }
+        }
+        else if (input == "ls") {
+            system("ls --color=auto");
+        }
+        else if (input.rfind("cat ", 0) == 0) {
+            string filename = input.substr(4);
+            ifstream file(filename);
+            if (file.is_open()) {
+                string line;
+                while (getline(file, line)) {
+                    cout << line << endl;
+                }
+                file.close();
+            } else {
+                cout << "File not found" << endl;
+            }
+        }
+        else if (input.rfind("mkdir ", 0) == 0) {
+            string dirname = input.substr(6);
+            system(("mkdir " + dirname).c_str());
+            cout << "✓ Created directory" << endl;
+        }
+        
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
