@@ -18,6 +18,7 @@
 #include <optional> 
 #include <deque>
 #include <map>
+#include <string>
 
 
 struct Task {
@@ -165,10 +166,39 @@ void load_deltacore() {
 
 // Important stuff and declarations
 
+vector<string> board = {
+    " ", " ", " ",
+    " ", " ", " ",
+    " ", " ", " "
+};
+
+
+vector<vector<int>> WIN_PATTERNS = {
+    {0, 1, 2},
+    {3, 4, 5},
+    {6, 7, 8},
+    {0, 3, 6},
+    {1, 4, 7},
+    {2, 5, 8},
+    {0, 4, 8},
+    {2, 4, 6}
+};
 
 
 
 vector<Task> todo_list;     // woww super cool
+
+
+void displayBoard(const vector<string>& board) {
+    cout << "-------------\n";
+    for (int r = 0; r < 3; r++) {
+        cout << "| ";
+        for (int c = 0; c < 3; c++) {
+            cout << board[r][c] << " | ";
+        }
+        cout << "\n-------------\n";
+    }
+}
 
 
 
@@ -730,8 +760,11 @@ int main() {
         else if (input == "games") {
             cout << "=== Mini Games ===" << endl;
             cout << "1: Number Guessing" << endl;
-            cout << "2: Rock Paper Scissors" << endl;
-            cout << "3: Hangman (text)" << endl;
+            cout << "2: Tic Tac Toe" << endl;
+            cout << "3: Rock-Paper-Scissors" << endl;
+            cout << "4: Hangman" << endl;
+            cout << "5: Snake" << endl;
+            cout << "6: Connect Four" << endl;
             int choice;
             cin >> choice;
             cin.ignore();
@@ -753,6 +786,9 @@ int main() {
                         cout << "📉 Lower!" << endl;
                     }
                 }
+            }
+            else if (choice == 2) {
+                
             }
         }
         else if (input == "todo") {
