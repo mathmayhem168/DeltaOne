@@ -19,6 +19,7 @@
 #include <deque>
 #include <map>
 #include <string>
+#include <ios>
 
 
 struct Task {
@@ -74,6 +75,7 @@ using std::make_pair;
 
 
 
+const string PACKAGE_DB = "packages.db";     // This is important.. yeah.
 
 
 
@@ -160,7 +162,72 @@ void load_deltacore() {
 }
 
 
+vector<string> load_packages() {
+    vector<string> packages;
+    ifstream file(PACKAGE_DB);
+    string line;
 
+    while (getline(file, line)) {
+        if (!line.empty()) packages.push_back(line);
+    }
+    return packages;
+}
+
+// Write updated package list
+void save_packages(const vector<string>& packages) {
+    ofstream file(PACKAGE_DB, std::ios::trunc);
+
+    for (const auto& pkg : packages) {
+        file << pkg << endl;
+    }
+}
+
+// INSTALL COMMAND
+void handle_install(const string& package_name) {
+    vector<string> packages = load_packages();
+
+    if (find(packages.begin(), packages.end(), package_name) != packages.end()) {
+        cout << "❌ Already installed: " << package_name << endl;
+        return;
+    }
+
+    packages.push_back(package_name);
+    save_packages(packages);
+
+    cout << "✅ Installed: " << package_name << endl;
+}
+
+// REMOVE COMMAND
+void handle_remove(const string& package_name) {
+    vector<string> packages = load_packages();
+
+    auto it = find(packages.begin(), packages.end(), package_name);
+
+    if (it == packages.end()) {
+        cout << "❌ Not installed: " << package_name << endl;
+        return;
+    }
+
+    packages.erase(it);
+    save_packages(packages);
+
+    cout << "🗑️ Removed: " << package_name << endl;
+}
+
+// LIST COMMAND
+void handle_list() {
+    vector<string> packages = load_packages();
+
+    if (packages.empty()) {
+        cout << "📦 No packages installed." << endl;
+        return;
+    }
+
+    cout << "📦 Installed Packages:" << endl;
+    for (const auto& p : packages) {
+        cout << "- " << p << endl;
+    }
+}
 
 
 
@@ -931,8 +998,18 @@ int main() {
             string dirname = input.substr(6);
             system(("mkdir " + dirname).c_str());
             cout << "✓ Created directory" << endl;
+        }                      
+        if (input.rfind("install ", 0) == 0) {
+            string pkg = input.substr(8);
+            handle_install(pkg);
         }
-        
+        else if (input.rfind("remove ", 0) == 0) {
+            string pkg = input.substr(7);
+            handle_remove(pkg);
+        }
+        else if (input == "list") {
+            handle_list();
+        }                       
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
