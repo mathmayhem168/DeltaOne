@@ -64,7 +64,14 @@ int countOnes(string n) {
 }
 
 
-
+bool isInList(vector<double> nums, double target) {
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == target) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 
