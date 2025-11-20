@@ -94,6 +94,15 @@ void delete_task(std::vector<Task>& list, int index) {
 }
 
 
+vector<string> permission_levels = {"Guest", "User", "Admin", "Co-owner", "Owner"}; // Don't change this.. or change it 🤷
+
+
+string permission_default = "User";   
+
+int indexOfManualPermission = 0;    // the index of the permission. For example, a index of 5 means that the permission is the 4th element of the list of permission levels.
+
+string manualPermission = permission_levels[indexOfManualPermission - 1];
+
 
 
 map<string, string> aliases;
@@ -102,7 +111,6 @@ map<string, string> env_vars;
 void load_deltacore() {
     string home = getenv("HOME");
     string deltacore_path = home + "/.deltacore";
-    
     ifstream config(deltacore_path);
     if (!config.is_open()) {
         // First time - create default config
@@ -268,7 +276,14 @@ void displayBoard(const vector<string>& board) {
 }
 
 
-
+bool isInList(vector<double> nums, double target) {     
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == target) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 vector<string> history_list;
@@ -515,6 +530,10 @@ int main() {
         }
         else if (input == "whoami") {
             cout << getUserHost() << endl;
+            cout << "You are also a " << manualPermission << ". This means that: " << endl;
+            cout << ("You cannot delete or modify any sensitive files or mess with anything.\n" ? manualPermission = "Guest" || "User" : "");
+            cout << ("You can modify anything and run tests for any feature.\n" ? manualPermission = "Co-owner" || "Owner" : "");
+            cout << ("You are permitted to do anything except mess with the code or harm sensitive info.\n" ? manualPermission = "Admin" : "");                                                             
         }
         else if (input.rfind("sleep ", 0) == 0) {
             int seconds = stoi(input.substr(6));
