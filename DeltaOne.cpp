@@ -71,6 +71,8 @@ using std::uniform_int_distribution;
 using std::time;
 using std::pair;
 using std::make_pair;
+using std::max;
+using std::min;
 
 
 
@@ -258,6 +260,31 @@ vector<vector<int>> WIN_PATTERNS = {
     {0, 4, 8},
     {2, 4, 6}
 };
+
+
+vector<vector<char>> wonRPSlist = {
+    {'R', 'S'},
+    {'P', 'R'},
+    {'S', 'P'}
+};
+
+
+bool wonRockPaperScissors(char input, char output) {
+    bool won = false;   // default = lose
+
+    for (int i = 0; i < 3; i++) {
+        if (wonRPSlist[i][0] == input && wonRPSlist[i][1] == output) {
+            won = true;
+            break;   
+        }
+    }
+
+    return won;
+}
+
+
+
+
 
 
 
@@ -874,7 +901,188 @@ int main() {
                 }
             }
             else if (choice == 2) {
+                // TIC-TAC-TOE
+                board = {" ", " ", " ", " ", " ", " ", " ", " ", " "};  // Reset global board
                 
+                auto display_board = [](const vector<string>& b) {
+                    cout << "\n";
+                    cout << " " << b[0] << " | " << b[1] << " | " << b[2] << "\n";
+                    cout << "---|---|---\n";
+                    cout << " " << b[3] << " | " << b[4] << " | " << b[5] << "\n";
+                    cout << "---|---|---\n";
+                    cout << " " << b[6] << " | " << b[7] << " | " << b[8] << "\n\n";
+                };
+                
+                auto check_winner = [](const vector<string>& b, string player) -> bool {
+                    for (auto& pattern : WIN_PATTERNS) {  // <-- USES YOUR GLOBAL LIST!
+                        if (b[pattern[0]] == player && 
+                            b[pattern[1]] == player && 
+                            b[pattern[2]] == player) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+                
+                auto is_full = [](const vector<string>& b) -> bool {
+                    for (const auto& cell : b) {
+                        if (cell == " ") return false;
+                    }
+                    return true;
+                };
+                
+                // Minimax AI
+                auto minimax = [&](vector<string>& b, bool is_maximizing, auto& minimax_ref) -> int {
+                    if (check_winner(b, "O")) return 10;
+                    if (check_winner(b, "X")) return -10;
+                    if (is_full(b)) return 0;
+                    
+                    if (is_maximizing) {
+                        int best = -1000;
+                        for (int i = 0; i < 9; i++) {
+                            if (b[i] == " ") {
+                                b[i] = "O";
+                                best = max(best, minimax_ref(b, false, minimax_ref));
+                                b[i] = " ";
+                            }
+                        }
+                        return best;
+                    } else {
+                        int best = 1000;
+                        for (int i = 0; i < 9; i++) {
+                            if (b[i] == " ") {
+                                b[i] = "X";
+                                best = min(best, minimax_ref(b, true, minimax_ref));
+                                b[i] = " ";
+                            }
+                        }
+                        return best;
+                    }
+                };
+                
+                auto find_best_move = [&](vector<string>& b) -> int {
+                    int best_val = -1000;
+                    int best_move = -1;
+                    
+                    for (int i = 0; i < 9; i++) {
+                        if (b[i] == " ") {
+                            b[i] = "O";
+                            int move_val = minimax(b, false, minimax);
+                            b[i] = " ";
+                            
+                            if (move_val > best_val) {
+                                best_move = i;
+                                best_val = move_val;
+                            }
+                        }
+                    }
+                    return best_move;
+                };
+                
+                cout << "\n=== TIC-TAC-TOE ===\nYou: X | AI: O\n";
+                
+                while (true) {
+                    display_board(board);
+                    
+                    cout << "Your move (1-9): ";
+                    int move;
+                    cin >> move;
+                    cin.ignore();
+                    
+                    int idx = move - 1;
+                    if (idx < 0 || idx > 8 || board[idx] != " ") {
+                        cout << "❌ Invalid!" << endl;
+                        continue;
+                    }
+                    
+                    board[idx] = "X";
+                    
+                    if (check_winner(board, "X")) {
+                        display_board(board);
+                        cout << "🎉 You win!" << endl;
+                        break;
+                    }
+                    if (is_full(board)) {
+                        display_board(board);
+                        cout << "🤝 Tie!" << endl;
+                        break;
+                    }
+                    
+                    int ai_move = find_best_move(board);
+                    board[ai_move] = "O";
+                    cout << "AI → " << (ai_move + 1) << endl;
+                    
+                    if (check_winner(board, "O")) {
+                        display_board(board);
+                        cout << "😞 AI wins!" << endl;
+                        break;
+                    }
+                    if (is_full(board)) {
+                        display_board(board);
+                        cout << "🤝 Tie!" << endl;
+                        break;
+                    }
+                }
+            }
+            else if (choice == 3) {
+                cout << "Rock, Paper, or Scissors? " << endl;
+                char input;
+                cin >> input;
+
+                int smart = randomnum(0, 1);
+                char output;
+                int dumb = randomnum(1, 3);
+
+                if (input == 'R' || 'r') {
+                    if (smart == 1) {
+                        output == 'P';
+                    }
+                    else {
+                        if (dumb == 1) {
+                            output == 'R';
+                        }
+                        else if (dumb == 2) {
+                            output = 'P';
+                        }
+                        else {
+                            output == 'S';
+                        }
+                    }
+                }
+                else if (input == 'P' || 'p') {
+                    if (smart == 1) {
+                        output == 'S';
+                    }
+                    else {
+                        if (dumb == 1) {
+                            output == 'R';
+                        }
+                        else if (dumb == 2) {
+                            output == 'P';
+                        }
+                        else {
+                            output == 'S';
+                        }
+                    }
+                }
+                else if (input == 'S' || 's') {
+                    if (smart == 1) {
+                        output == 'S';
+                    }
+                    else {
+                        if (dumb == 1) {
+                            output == 'R';
+                        }
+                        else if (dumb == 2) {
+                            output == 'P';
+                        }
+                        else {
+                            output == 'S';
+                        }
+                    }
+                }
+                cout << "I pick: " << output << endl;
+                cout << "You " << (wonRockPaperScissors(input, output) ? "WIN!" : "LOST!") << endl;
             }
         }
         else if (input == "todo") {
