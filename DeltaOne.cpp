@@ -75,7 +75,7 @@ using std::max;
 using std::min;
 
 
-
+using namespace std;
 
 const string PACKAGE_DB = "packages.db";     // This is important.. yeah.
 
@@ -288,7 +288,6 @@ bool wonRockPaperScissors(char input, char output) {
 
 
 
-vector<Task> todo_list;     // woww super cool
 
 
 void displayBoard(const vector<string>& board) {
