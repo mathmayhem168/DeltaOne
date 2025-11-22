@@ -22,20 +22,6 @@
 #include <ios>
 
 
-struct Task {
-    string text;
-    bool done;
-    
-    Task(string t) : text(t), done(false) {}
-    
-    string toString() {
-        string status = done ? "[x]" : "[ ]";
-        return status + " " + text;
-    }
-};
-
-// Global todo list
-vector<Task> todo_list;
 
 
 
@@ -170,6 +156,28 @@ void load_deltacore() {
     
     config.close();
 }
+
+
+struct Task {
+    string text;
+    bool done;
+    
+    Task(string t) : text(t), done(false) {}
+    
+    string toString() {
+        std::string status = done ? "[x]" : "[ ]";
+        return status + " " + text;
+    }
+};
+
+// Global todo list
+std::vector<Task> todo_list;
+
+
+
+
+
+
 
 
 vector<string> load_packages() {
