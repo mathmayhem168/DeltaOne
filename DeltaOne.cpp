@@ -87,7 +87,22 @@ struct Task {
 };
 
 
+string decimalToBase(long number, int base) {
+    if (number == 0) {
+        return "0";
+    }
 
+    string result = "";
+    string digits = "0123456789ABCDEF";
+
+    while (number > 0) {
+        int remainder = number % base;
+        result = digits[remainder] + result;   
+        number = number / base;
+    }
+
+    return result;
+}
 
 
 
@@ -1037,16 +1052,17 @@ int main() {
                 }
             }
             else if (choice == 3) {
-                cout << "Rock, Paper, or Scissors? " << endl;
+                // RPS (a cool acryonym)
+                cout << "Rock, Paper, or Scissors? (R/P/S): " << endl;
                 char input;
                 cin >> input;
+                cin.ignore();  // Like the cherry on the cake
 
                 int smart = randomnum(0, 1);
                 char output;
                 int dumb = randomnum(1, 3);
 
                 if (input == 'R' || input == 'r') {
-                    
                     if (smart == 1) {
                         output = 'P';   // Rock loses to Paper
                     } else {
@@ -1075,9 +1091,16 @@ int main() {
                 }
 
                 cout << "I pick: " << output << endl;
-                cout << "You " << (wonRockPaperScissors(input, output) ? "WIN!" : "LOST!") << endl;
+                
+                // Fix the win check
+                if (input == output) {      // Man, wish there was a triple ternary. 
+                    cout << "🤝 TIE!" << endl;
+                } else if (wonRockPaperScissors(input, output)) {
+                    cout << "🎉 You WIN!" << endl;
+                } else {
+                    cout << "😞 You LOST!" << endl;
+                }
             }
-        }
         else if (input == "todo") {
             while (true) {
                 cout << "\n=== Todo List ===" << endl;
@@ -1229,7 +1252,218 @@ int main() {
         }
         else if (input == "list") {
             handle_list();
-        }                       
+        }        
+        else if (input.rfind("convert ", 0) == 0) {
+            string args = input.substr(8);
+            size_t space_pos = args.find(' ');
+            if (space_pos == string::npos) {
+                cout << "Usage: conver <number> <base>" << endl;
+            }
+            else {
+                string num_str = args.substr(0, space_pos);        // "12"
+                string base_str = args.substr(space_pos + 1);
+                long number = stol(num_str);
+                int base = stoi(base_str);
+                string resultOfConversion = decimalToBase(number, base);
+                cout << "Result: " << resultOfConversion << endl;
+            }
+        }              
+        else if (input.rfind("reverse ", 0) == 0) {
+            string text = input.substr(8);
+            reverse(text.begin(), text.end());
+            cout << text << endl;
+        }
+        else if (input.rfind("pacman -S ", 0) == 0) {       // Just for the fun of it.. I don't know anything about this. Pacman is cool, in any context, though.
+            string pkg = input.substr(10);
+            
+            cout << ":: Synchronizing package databases..." << endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            cout << "resolving dependencies..." << endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            cout << "looking for conflicting packages..." << endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            
+            handle_install(pkg);
+        }
+        else if (input.rfind("cowsay ", 0) == 0) {
+            string message = input.substr(7);
+            int len = message.length();
+            
+            cout << " " << string(len + 2, '_') << endl;
+            cout << "< " << message << " >" << endl;
+            cout << " " << string(len + 2, '-') << endl;
+            cout << R"(        \   ^__^
+                \  (oo)\_______
+                    (__)\       )\/\
+                        ||----w |
+                        ||     ||)" << endl;
+        }
+        else if (input == "date") {
+            time_t now = time(nullptr);
+            tm *local = localtime(&now);
+            char buffer[100];
+            strftime(buffer, sizeof(buffer), "%a %b %d %H:%M:%S %Z %Y", local);
+            cout << buffer << endl;
+        }
+        else if (input.rfind("python oneline ", 0) == 0) {
+            string code = input.substr(10);
+            
+            // Build Python command
+            string cmd = "python3 -c \"" + code + "\"";
+            
+            cout << "Running Python..." << endl;
+            system(cmd.c_str());
+        }
+        else if (input == "python" || input == "python3") {
+            cout << "Starting Python interpreter..." << endl;
+            cout << "(Type 'exit()' or Ctrl+D to return to DeltaOne)" << endl;
+            cout << endl;
+            
+            system("python3");
+            
+            cout << endl;
+            cout << "✅ Returned to DeltaOne" << endl;
+        }
+        else if (input.rfind("python ", 0) == 0) {
+            string filename = input.substr(7);
+            
+            if (filename.find(".py") == string::npos) {
+                cout << "❌ Error: Must be a .py file" << endl;
+            } else {
+                cout << "🐍 Running Python script: " << filename << endl;
+                cout << "======================" << endl;
+                
+                string cmd = "python3 " + filename;
+                int status = system(cmd.c_str());
+                
+                cout << "======================" << endl;
+                
+                if (status == 0) {
+                    cout << "✅ Script finished successfully" << endl;
+                } else {
+                    cout << "❌ Script exited with error code " << status << endl;
+                }
+            }
+        }
+        else if (input == "pyedit" || input.rfind("pyedit ", 0) == 0) {
+            string filename = "temp.py";
+            
+            if (input.length() > 7) {
+                filename = input.substr(7);
+            }
+            
+            cout << "📝 Python Editor" << endl;
+            cout << "Type your code (type 'END' on a new line to finish)" << endl;
+            cout << "======================" << endl;
+            
+            vector<string> lines;
+            string line;
+            
+            cin.ignore();  // Clear buffer
+            
+            while (true) {
+                getline(cin, line);
+                
+                if (line == "END") {
+                    break;
+                }
+                
+                lines.push_back(line);
+            }
+            
+            // Write to file
+            ofstream pyfile(filename);
+            for (auto& l : lines) {
+                pyfile << l << endl;
+            }
+            pyfile.close();
+            
+            cout << "======================" << endl;
+            cout << "✅ Saved to " << filename << endl;
+            cout << "Running..." << endl;
+            cout << "======================" << endl;
+            
+            string cmd = "python3 " + filename;
+            system(cmd.c_str());
+            
+            cout << "======================" << endl;
+        }
+        else if (input.rfind("pycalc ", 0) == 0) {
+                    string expr = input.substr(7);
+                    
+                    string cmd = "python3 -c \"print(" + expr + ")\"";
+                    
+                    cout << "Result: ";
+                    system(cmd.c_str());
+                }
+        else if (input == "py") {
+            cout << "=== Python Mini-IDE ===" << endl;
+            cout << "Commands:" << endl;
+            cout << "  write <file>  - Write Python code" << endl;
+            cout << "  run <file>    - Run Python file" << endl;
+            cout << "  shell         - Open Python REPL" << endl;
+            cout << "  list          - List .py files" << endl;
+            cout << "  exit          - Return to DeltaOne" << endl;
+            cout << endl;
+            
+            while (true) {
+                cout << "Python-IDE > ";
+                string pyinput;
+                getline(cin, pyinput);
+                
+                if (pyinput == "exit") {
+                    break;
+                }
+                else if (pyinput.rfind("write ", 0) == 0) {
+                    string filename = pyinput.substr(6);
+                    
+                    cout << "Enter code (type 'DONE' to finish):" << endl;
+                    
+                    ofstream file(filename);
+                    string line;
+                    
+                    while (true) {
+                        getline(cin, line);
+                        if (line == "DONE") break;
+                        file << line << endl;
+                    }
+                    
+                    file.close();
+                    cout << "✅ Saved " << filename << endl;
+                }
+                else if (pyinput.rfind("run ", 0) == 0) {
+                    string filename = pyinput.substr(4);
+                    
+                    cout << "=======================" << endl;
+                    system(("python3 " + filename).c_str());
+                    cout << "=======================" << endl;
+                }
+                else if (pyinput == "shell") {
+                    system("python3");
+                }
+                else if (pyinput == "list") {
+                    system("ls *.py 2>/dev/null");
+                }
+                else {
+                    cout << "Unknown command. Type 'exit' to quit." << endl;
+                }
+            }
+            
+            cout << "Returned to DeltaOne" << endl;
+        }
+        else if (input.rfind("pybuy ", 0) == 0 && input.find(" DeltaOne") != string::npos) {
+            // Extract the module name between "pybuy " and " DeltaOne"
+            
+            size_t start = 6;  // After "pybuy "
+            size_t end = input.find(" DeltaOne");
+            
+            string module = input.substr(start, end - start);
+            
+            cout << "Installing Python module: " << module << endl;
+            
+            string cmd = "pip3 install " + module;
+            system(cmd.c_str());
+        }
         else if (input.find(' ') != string::npos) {             // Detects if there is >1 words or tokens
             stringstream ss(input);
             string token;
@@ -1324,5 +1558,14 @@ int main() {
     for (auto& cmd : history_list) fout << cmd << endl;
     fout.close();
 
-    return 0;
+    return 0;           // THE GRAND FINALE 
 }
+
+
+
+
+// Random code (how much code? 150 lines?)
+
+
+
+
