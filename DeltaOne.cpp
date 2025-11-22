@@ -1014,7 +1014,7 @@ int main() {
                     
                     if (check_winner(board, "O")) {
                         display_board(board);
-                        cout << "😞 AI wins!" << endl;
+                        cout << "😭 AI wins!" << endl;
                         break;
                     }
                     if (is_full(board)) {
@@ -1033,54 +1033,35 @@ int main() {
                 char output;
                 int dumb = randomnum(1, 3);
 
-                if (input == 'R' || 'r') {
+                if (input == 'R' || input == 'r') {
+                    
                     if (smart == 1) {
-                        output == 'P';
-                    }
-                    else {
-                        if (dumb == 1) {
-                            output == 'R';
-                        }
-                        else if (dumb == 2) {
-                            output = 'P';
-                        }
-                        else {
-                            output == 'S';
-                        }
+                        output = 'P';   // Rock loses to Paper
+                    } else {
+                        if (dumb == 1) output = 'R';
+                        else if (dumb == 2) output = 'P';
+                        else output = 'S';
                     }
                 }
-                else if (input == 'P' || 'p') {
+                else if (input == 'P' || input == 'p') {
                     if (smart == 1) {
-                        output == 'S';
-                    }
-                    else {
-                        if (dumb == 1) {
-                            output == 'R';
-                        }
-                        else if (dumb == 2) {
-                            output == 'P';
-                        }
-                        else {
-                            output == 'S';
-                        }
+                        output = 'S';   // Paper loses to Scissors
+                    } else {
+                        if (dumb == 1) output = 'R';
+                        else if (dumb == 2) output = 'P';
+                        else output = 'S';
                     }
                 }
-                else if (input == 'S' || 's') {
+                else if (input == 'S' || input == 's') {
                     if (smart == 1) {
-                        output == 'S';
-                    }
-                    else {
-                        if (dumb == 1) {
-                            output == 'R';
-                        }
-                        else if (dumb == 2) {
-                            output == 'P';
-                        }
-                        else {
-                            output == 'S';
-                        }
+                        output = 'R';   // Scissors lose to Rock
+                    } else {
+                        if (dumb == 1) output = 'R';
+                        else if (dumb == 2) output = 'P';
+                        else output = 'S';
                     }
                 }
+
                 cout << "I pick: " << output << endl;
                 cout << "You " << (wonRockPaperScissors(input, output) ? "WIN!" : "LOST!") << endl;
             }
