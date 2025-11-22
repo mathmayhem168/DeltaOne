@@ -74,6 +74,21 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
 }
 
 
+struct Task {
+    string text;
+    bool done;
+    
+    Task(string t) : text(t), done(false) {}
+    
+    string toString() {
+        std::string status = done ? "[x]" : "[ ]";
+        return status + " " + text;
+    }
+};
+
+
+
+
 
 
 vector<string> permission_levels = {"Guest", "User", "Admin", "Co-owner", "Owner"}; // Don't change this.. or change it 🤷
@@ -152,17 +167,7 @@ void load_deltacore() {
 }
 
 
-struct Task {
-    string text;
-    bool done;
-    
-    Task(string t) : text(t), done(false) {}
-    
-    string toString() {
-        std::string status = done ? "[x]" : "[ ]";
-        return status + " " + text;
-    }
-};
+
 
 // Global todo list
 std::vector<Task> todo_list;
