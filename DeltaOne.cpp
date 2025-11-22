@@ -73,13 +73,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* out
     return totalSize;
 }
 
-void delete_task(std::vector<Task>& list, int index) {
-    if (index < 0 || index >= list.size()) {
-        std::cout << "Invalid index\n";
-        return;
-    }
-    list.erase(list.begin() + index);
-}
+
 
 
 vector<string> permission_levels = {"Guest", "User", "Admin", "Co-owner", "Owner"}; // Don't change this.. or change it 🤷
@@ -174,7 +168,13 @@ struct Task {
 std::vector<Task> todo_list;
 
 
-
+void delete_task(std::vector<Task>& list, int index) {
+    if (index < 0 || index >= list.size()) {
+        std::cout << "Invalid index\n";
+        return;
+    }
+    list.erase(list.begin() + index);
+}
 
 
 
