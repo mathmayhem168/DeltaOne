@@ -1,12 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-
-
+#include <random>
+#include <algorithm>
 
 
 
 using namespace std;
+
 
 
 
@@ -175,9 +176,87 @@ long findVertexX(function<double(double)> f, double initialGuess, double tol = 1
 
 
 
+double sumOfList(vector<double> nums) {
+    double sum = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        sum += nums[i];
+    }
+    return sum;
+}
 
 
 
+double mean(vector<double> nums) {
+    return (sumOfList(nums)) / (nums.size());
+}
+
+
+double average(double a, double b) {
+    return (a + b) / 2;
+}
+
+
+
+
+
+double median(vector<double> nums) {
+    long length = nums.size();
+    if (length == 0) {
+        return 0;
+    }
+    if (isSorted(nums)) {
+        if (length % 2 == 1) {
+            return nums[ceil(length / 2)];
+        }
+        else {
+            return average(nums[length / 2 - 1], nums[length / 2]);
+        }
+    }
+    else {
+        selectionSort(nums);
+        return median(nums);
+    }
+}
+
+long frequency(vector<double> nums, double target) {
+    long result = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == target) {
+            result += 1;
+        }
+    }
+    return result;
+}
+
+
+
+
+double midrange(vector<double> nums) { 
+    return ((maximum(nums) + minimum(nums))) / 2;
+}
+
+
+double range(vector<double> nums) {
+    return maximum(nums) - minimum(nums);
+}
+
+
+double variance(const std::vector<double>& nums, bool population) {
+    double meanOfSet = mean(nums);
+    double sum = 0.0;
+    size_t size = nums.size();
+
+    for (double x : nums) {
+        double diff = x - meanOfSet;
+        sum += diff * diff;
+    }
+
+    return population ? sum / size : sum / (size - 1);
+}
+
+double standardDeviation(const std::vector<double>& nums, bool population) {
+    return std::sqrt(variance(nums, population));
+}
 
 
 
@@ -229,7 +308,24 @@ bool isSorted(const vector<double>& nums) {
 }
 
 
+vector<double> pogoSort(vector<double> nums) {
+    bool sorted = false;
+    double max = maximum(nums);
+    double min = maximum(nums);
+    int length = nums.size();
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine rng(seed);
+    
+    std::cout << "Starting Pogo Sort..." << std::endl;
+    long long attempts = 0;
 
+    // Shuffle repeatedly until sorted
+    while (!isSorted(nums)) {
+        std::shuffle(nums.begin(), nums.end(), rng);
+        attempts++;
+    }
+
+}
 
 
 
@@ -275,6 +371,31 @@ int binarySearch(vector<double> nums, double target) {
 
     return -1;
 }
+
+double maximum(vector<double> nums) {
+    double temp = nums[0];
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] > temp) {
+            temp = nums[i];
+        }
+    }
+    return temp;
+}
+
+
+
+double minimum(vector<double> nums) {
+    double temp = nums[0];
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] < temp) {
+            temp = nums[i];
+        }
+    }
+    return temp;
+}
+
+
+
 
 
 
