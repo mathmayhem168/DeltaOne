@@ -32,7 +32,9 @@
 
 
 // Also, sorry about the clear and terminal inputs, they only work for Mac and Linux. 😅
-// Honestly, I was too lazy. But could you blame me if you made the 1000 lines of code?
+// Honestly, I was too lazy. But could you blame me if you made the 1000 (1574, actually) lines of code?
+
+
 
 // TODO: omg this is my first todo list
 
@@ -312,9 +314,63 @@ bool wonRockPaperScissors(char input, char output) {
 
 
 
+void saveTodo(const std::vector<Task>& todo_list) {
+    std::ofstream file("todo.db");   // creates/overwrites file
 
+    if (!file.is_open()) {
+        std::cout << "Error: Could not open todo.db\n";
+        return;
+    }
 
+    for (const auto& task : todo_list) {
+        file << (task.done ? "[x] " : "[ ] ");
+        file << task.text << "\n";
+    }
 
+    file.close();
+}
+
+void loadTodo(std::vector<Task>& todo_list) {
+    std::ifstream file("todo.db");
+
+    // If file doesn't exist or can't open, just return safely
+    if (!file.is_open()) {
+        std::cout << "No existing todo file found. Starting fresh.\n";
+        return;
+    }
+
+    todo_list.clear();
+
+    std::string line;
+    while (std::getline(file, line)) {
+
+        // Skip empty lines
+        if (line.empty()) continue;
+
+        bool done = false;
+        std::string text;
+
+        // Detect status
+        if (line.rfind("[x] ", 0) == 0) {
+            done = true;
+            text = line.substr(4);   // remove "[x] "
+        }
+        else if (line.rfind("[ ] ", 0) == 0) {
+            done = false;
+            text = line.substr(4);  // remove "[ ] "
+        }
+        else {
+            // If malformed line, skip it
+            continue;
+        }
+
+        Task t(text);
+        t.done = done;
+        todo_list.push_back(t);
+    }
+
+    file.close();
+}
 
 
 
@@ -1108,12 +1164,14 @@ int main() {
                 cout << "2: Add Task" << endl;
                 cout << "3: Mark Done" << endl;
                 cout << "4: Delete Task" << endl;
-                cout << "5: Exit" << endl;
+                cout << "5: Save Tasks" << endl;
+                cout << "6: Load Tasks" << endl;
+                cout << "7: Exit" << endl;
                 cout << "Choose: ";
                 
                 int choice;
                 cin >> choice;
-                cin.ignore();  // ← SUPER IMPORTANT! Clears the newline after cin
+                cin.ignore();  // SUPER IMPORTANT! Clears the newline after cin
                 
                 if (choice == 1) {
                     // Show all tasks
@@ -1188,12 +1246,15 @@ int main() {
                     }
                 }
                 else if (choice == 5) {
+                    saveTodo(todo_list);
+                }
+                else if (choice == 6) {
+                    loadTodo(todo_list);
+                }
+                else if (choice == 7) {     // 67 meme. Really.
                     // Exit
                     cout << "Exiting Todo..." << endl;
                     break;
-                }
-                else {
-                    cout << "Invalid choice!" << endl;
                 }
             }
         }
